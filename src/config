@@ -1,2 +1,4 @@
 #tanks count at initialization
 initTankCount=8
+goodFs=com.mashibing.tank.FourDirFireStrategy
+badFs=com.mashibing.tank.DefaultFireStrategy

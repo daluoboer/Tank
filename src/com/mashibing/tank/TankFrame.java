@@ -5,8 +5,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Description com.mashibing.tank.TankFrame
@@ -14,16 +12,10 @@ import java.util.List;
  * @Date 2020-08-28 15:14
  */
 public class TankFrame extends Frame {
-    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
-    List<Bullet> bullets = new ArrayList<Bullet>();
-
-    List<Tank> enemies = new ArrayList<>();
-    Bullet b = new Bullet(300,300,Dir.DOWN,Group.GOOD,this);
-    List<Explode> explodes = new ArrayList<>();
-    static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
+    GameModel gm = new GameModel();
 
     public TankFrame() throws HeadlessException {
-        setSize(GAME_WIDTH,GAME_HEIGHT);
+        setSize(GameModel.GAME_WIDTH,GameModel.GAME_HEIGHT);
         setResizable(false);
         setTitle("com.mashibing.tank.Tank War");
         setVisible(true);
@@ -41,12 +33,12 @@ public class TankFrame extends Frame {
     @Override
     public void update(Graphics g) {
         if (offScreenImage == null) {
-            offScreenImage = this.createImage(GAME_WIDTH,GAME_HEIGHT);
+            offScreenImage = this.createImage(GameModel.GAME_WIDTH,GameModel.GAME_HEIGHT);
         }
         Graphics gOffScrean = offScreenImage.getGraphics();
         Color c = gOffScrean.getColor();
         gOffScrean.setColor(Color.BLACK);
-        gOffScrean.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        gOffScrean.fillRect(0,0,GameModel.GAME_WIDTH,GameModel.GAME_HEIGHT);
         gOffScrean.setColor(c);
         paint(gOffScrean);
         g.drawImage(offScreenImage,0,0,null);
@@ -54,44 +46,7 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.WHITE);
-        g.drawString("子弹的数量：" + bullets.size(),100,60);
-        g.drawString("敌人的数量：" + enemies.size(), 100, 80);
-        g.drawString("爆炸的数量：" + explodes.size(), 100, 100);
-        g.setColor(c);
-        myTank.paint(g);
-        //画
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
-        }
-
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).paint(g);
-        }
-
-        for (int i = 0; i < explodes.size(); i++) {
-            explodes.get(i).paint(g);
-        }
-
-        //碰撞检测 collision detect
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < enemies.size(); j++) {
-                bullets.get(i).collideWith(enemies.get(j));
-            }
-        }
-
-        Explode e = new Explode(100,100,this);
-
-//        e.paint(g);
-        /*for (com.mashibing.tank.Bullet b : bullets) {
-            b.paint(g);
-        }*/
-
-        /*for (Iterator<com.mashibing.tank.Bullet> it = bullets.iterator();it.hasNext();) {
-            com.mashibing.tank.Bullet b = it.next();
-            if (!b.living) it.remove();
-        }*/
+        gm.paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -117,7 +72,7 @@ public class TankFrame extends Frame {
                     bD = true;
                     break;
                 case KeyEvent.VK_CONTROL:
-                    myTank.fire();
+                    gm.getMainTank().fire();
                     break;
                 default:
                     break;
@@ -149,13 +104,13 @@ public class TankFrame extends Frame {
 
         private void setMainTankDir() {
             if (!bL && !bU && !bR && !bD) {
-                myTank.setMoving(false);
+                gm.getMainTank().setMoving(false);
             } else {
-                myTank.setMoving(true);
-                if (bL) myTank.setDir(Dir.LEFT);
-                if (bU) myTank.setDir(Dir.UP);
-                if (bR) myTank.setDir(Dir.RIGHT);
-                if (bD) myTank.setDir(Dir.DOWN);
+                gm.getMainTank().setMoving(true);
+                if (bL) gm.getMainTank().setDir(Dir.LEFT);
+                if (bU) gm.getMainTank().setDir(Dir.UP);
+                if (bR) gm.getMainTank().setDir(Dir.RIGHT);
+                if (bD) gm.getMainTank().setDir(Dir.DOWN);
             }
         }
     }

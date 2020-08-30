@@ -20,18 +20,18 @@ public class Tank {
 
     private Random random = new Random();
 
-    TankFrame tf;
-
     Group group = Group.BAD;
 
     FireStrategy fs;
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    GameModel gm;
+
+    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tf = tf;
+        this.gm = gm;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
@@ -64,7 +64,7 @@ public class Tank {
 
     public void paint(Graphics g) {
         if (!living) {
-            tf.enemies.remove(this);
+            gm.enemies.remove(this);
         }
         switch (dir) {
             case LEFT:
@@ -114,8 +114,8 @@ public class Tank {
     private void boundsCheck() {
         if (this.x < 2) x = 2;
         if (this.y < 28) y = 28;
-        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+        if (this.x > GameModel.GAME_WIDTH - Tank.WIDTH - 2) x = GameModel.GAME_WIDTH - Tank.WIDTH - 2;
+        if (this.y > GameModel.GAME_HEIGHT - Tank.HEIGHT - 2) y = GameModel.GAME_HEIGHT - Tank.HEIGHT - 2;
     }
 
     private void randomDir() {
