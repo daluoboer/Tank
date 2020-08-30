@@ -1,4 +1,4 @@
-package com.mashibing.dp.factory;
+package com.mashibing.dp.factoryMethod;
 
 /**
  * @Description Movable
