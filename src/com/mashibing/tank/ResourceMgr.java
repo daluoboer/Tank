@@ -10,6 +10,17 @@ import java.io.IOException;
  * @Date 2020-08-29 09:06
  */
 public class ResourceMgr {
+    //不过这写个单例好像也没啥用哎，这个类的东西不都是类属性吗~也不需要生成这个对象呀
+    private ResourceMgr() {}
+
+    private static class ResourceMgrHolder {
+        private static final ResourceMgr INSTANCE = new ResourceMgr();
+    }
+
+    public ResourceMgr getInstance() {
+        return ResourceMgrHolder.INSTANCE;
+    }
+
     public static BufferedImage goodTankL,goodTankU, goodTankR, goodTankD;
     public static BufferedImage badTankL,badTankU, badTankR, badTankD;
     public static BufferedImage bulletL,bulletU, bulletR, bulletD;

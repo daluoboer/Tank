@@ -8,7 +8,7 @@ package com.mashibing.singleton;
  * @Date 2020-08-30 08:11
  */
 public class Mgr06 {
-    private static Mgr06 INSTANCE;
+    private volatile static Mgr06 INSTANCE;//为啥要加volatile 指令重排序，可能会返回一个未初始化完成的对象还是啥，请参见JVM
 
     private Mgr06() {}
 
