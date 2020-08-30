@@ -10,8 +10,8 @@ import java.util.Random;
  */
 public class Tank {
     public Rectangle rect = new Rectangle();
-    private int x, y;
-    private Dir dir = Dir.DOWN;
+    int x, y;
+    Dir dir = Dir.DOWN;
     private static final int SPEED = 1;
     private boolean moving = true;
     private boolean living = true;
@@ -20,9 +20,11 @@ public class Tank {
 
     private Random random = new Random();
 
-    private TankFrame tf;
+    TankFrame tf;
 
-    private Group group = Group.BAD;
+    Group group = Group.BAD;
+
+    FireStrategy fs;
 
     public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
@@ -34,6 +36,29 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+        if (group == Group.GOOD) {
+            String goodFsName = (String)PropertyMgr.get("goodFs");
+            try {
+                fs = (FireStrategy) Class.forName(goodFsName).newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            String goodFsName = (String)PropertyMgr.get("badFs");
+            try {
+                fs = (FireStrategy) Class.forName(goodFsName).newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -114,9 +139,7 @@ public class Tank {
     }
 
     public void fire() {
-        int bX = this.x + WIDTH/2 - Bullet.WIDTH/2;
-        int bY = this.y + HEIGHT/2 - Bullet.HEIGHT/2;
-        tf.bullets.add(new Bullet(bX, bY, this.dir,group,tf));
+        fs.fire(this);
     }
 
     public void die() {
