@@ -1,6 +1,6 @@
-package com.mashibing.tank;
+package com.mashibing.tank.abstractFactory;
 
-import com.mashibing.tank.abstractFactory.BaseTank;
+import com.mashibing.tank.*;
 
 import java.awt.*;
 import java.util.Random;
@@ -10,7 +10,8 @@ import java.util.Random;
  * @Author Radish
  * @Date 2020-08-28 19:30
  */
-public class Tank extends BaseTank {
+public class RectTank extends BaseTank {
+    public Rectangle rect = new Rectangle();
     int x, y;
     Dir dir = Dir.DOWN;
     private static final int SPEED = 1;
@@ -27,7 +28,7 @@ public class Tank extends BaseTank {
 
     FireStrategy fs;
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public RectTank(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -44,7 +45,11 @@ public class Tank extends BaseTank {
         if (!living) {
             tf.enemies.remove(this);
         }
-        switch (dir) {
+        Color c = g.getColor();
+        g.setColor(group == Group.GOOD ? Color.BLUE : Color.GREEN);
+        g.fillRect(x,y,50,50);
+        g.setColor(c);
+        /*switch (dir) {
             case LEFT:
                 g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL : ResourceMgr.badTankL,x,y,null);
                 break;
@@ -57,7 +62,7 @@ public class Tank extends BaseTank {
             case DOWN:
                 g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankD : ResourceMgr.badTankD,x,y,null);
                 break;
-        }
+        }*/
         move();
     }
 
@@ -92,8 +97,8 @@ public class Tank extends BaseTank {
     private void boundsCheck() {
         if (this.x < 2) x = 2;
         if (this.y < 28) y = 28;
-        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+        if (this.x > TankFrame.GAME_WIDTH - RectTank.WIDTH - 2) x = TankFrame.GAME_WIDTH - RectTank.WIDTH - 2;
+        if (this.y > TankFrame.GAME_HEIGHT - RectTank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - RectTank.HEIGHT - 2;
     }
 
     private void randomDir() {
@@ -117,8 +122,10 @@ public class Tank extends BaseTank {
     }
 
     public void fire() {
-        int bX = x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int bY = y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+
+//        fs.fire(this);
+        int bX = x + RectTank.WIDTH/2 - Bullet.WIDTH/2;
+        int bY = y + RectTank.HEIGHT/2 - Bullet.HEIGHT/2;
         Dir[] dirs = Dir.values();
         for (Dir dir : dirs) {
             tf.gf.createBullet(bX, bY, dir,group,tf);

@@ -5,13 +5,13 @@ package com.mashibing.tank;
  * @Author Radish
  * @Date 2020-08-30 10:16
  */
-public class DefaultFireStrategy implements FireStrategy {
+public class DefaultFireStrategy/* implements FireStrategy */{
     /*private static final DefaultFireStrategy INSTANCE = new DefaultFireStrategy();
     private DefaultFireStrategy(){}
     public static DefaultFireStrategy getInstance() {
         return INSTANCE;
     }*/
-    @Override
+//    @Override
     public void fire(Tank t) {
         int bX = t.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
         int bY = t.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;

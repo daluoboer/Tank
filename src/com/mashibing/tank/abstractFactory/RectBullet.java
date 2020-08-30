@@ -1,7 +1,6 @@
-package com.mashibing.tank;
+package com.mashibing.tank.abstractFactory;
 
-import com.mashibing.tank.abstractFactory.BaseBullet;
-import com.mashibing.tank.abstractFactory.BaseTank;
+import com.mashibing.tank.*;
 
 import java.awt.*;
 
@@ -10,7 +9,7 @@ import java.awt.*;
  * @Author Radish
  * @Date 2020-08-28 20:11
  */
-public class Bullet extends BaseBullet {
+public class RectBullet extends BaseBullet {
     private static final int SPEED = 20;
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
@@ -26,7 +25,7 @@ public class Bullet extends BaseBullet {
 
     public boolean living = true;
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public RectBullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -44,7 +43,13 @@ public class Bullet extends BaseBullet {
         if (!living) {
             tf.bullets.remove(this);
         }
-        switch (dir) {
+
+        Color c = g.getColor();
+        g.setColor(Color.YELLOW);
+        g.fillRect(x,y,20,20);
+        g.setColor(c);
+
+        /*switch (dir) {
             case LEFT:
                 g.drawImage(ResourceMgr.bulletL,x,y,null);
                 break;
@@ -57,7 +62,7 @@ public class Bullet extends BaseBullet {
             case DOWN:
                 g.drawImage(ResourceMgr.bulletD,x,y,null);
                 break;
-        }
+        }*/
         move();
     }
 

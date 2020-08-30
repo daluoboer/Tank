@@ -1,5 +1,7 @@
 package com.mashibing.tank;
 
+import com.mashibing.tank.abstractFactory.RectTank;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
