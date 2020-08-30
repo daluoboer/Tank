@@ -1,4 +1,4 @@
-package com.mashibing.strategy;
+package com.mashibing.dp.strategy;
 
 import java.util.Arrays;
 
