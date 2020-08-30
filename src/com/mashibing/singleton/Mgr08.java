@@ -5,6 +5,7 @@ package com.mashibing.singleton;
  * 不仅可以解决线程同步，还可以反序列化
  * 前面的方法都可以被反序列化，可以通过class文件获取instance
  * 枚举类没有构造方法，从这个角度说就只有它是最完美的写法（它是abstractClass）
+ * 反序列化之后得到的依然是同一个对象
  * 完美写法之一
  * @Author Radish
  * @Date 2020-08-30 08:26
