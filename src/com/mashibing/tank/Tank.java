@@ -8,9 +8,8 @@ import java.util.Random;
  * @Author Radish
  * @Date 2020-08-28 19:30
  */
-public class Tank {
+public class Tank extends GameObject{
     public Rectangle rect = new Rectangle();
-    int x, y;
     Dir dir = Dir.DOWN;
     private static final int SPEED = 1;
     private boolean moving = true;
@@ -20,18 +19,17 @@ public class Tank {
 
     private Random random = new Random();
 
-    Group group = Group.BAD;
+    private Group group = Group.BAD;
 
     FireStrategy fs;
 
-    GameModel gm;
+    private int lastX, lastY;
 
-    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+    public Tank(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.gm = gm;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
@@ -48,23 +46,15 @@ public class Tank {
                 e.printStackTrace();
             }
         } else {
-            String goodFsName = (String)PropertyMgr.get("badFs");
-            try {
-                fs = (FireStrategy) Class.forName(goodFsName).newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            fs = new DefaultFireStrategy();
         }
+        GameModel.getInstance().add(this);
     }
 
 
     public void paint(Graphics g) {
         if (!living) {
-            gm.enemies.remove(this);
+            GameModel.getInstance().remove(this);
         }
         switch (dir) {
             case LEFT:
@@ -84,6 +74,8 @@ public class Tank {
     }
 
     private void move() {
+        lastX = x;
+        lastY = y;
         if (!moving) return;
         switch (dir) {
             case LEFT:
@@ -168,5 +160,14 @@ public class Tank {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public void stop() {
+        moving = false;
+    }
+
+    public void back() {
+        x = lastX;
+        y = lastY;
     }
 }

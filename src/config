@@ -1,4 +1,11 @@
+gameWidth=800
+gameHeight=600
 #tanks count at initialization
+myTankX=200
+myTankY=400
 initTankCount=8
+enemyY=50
 goodFs=com.mashibing.tank.FourDirFireStrategy
 badFs=com.mashibing.tank.DefaultFireStrategy
+#coliders
+colliders=com.mashibing.tank.cor.BulletTankCollider,com.mashibing.tank.cor.BulletWallCollider,com.mashibing.tank.cor.TankTankCollider,com.mashibing.tank.cor.TankWallCollider
