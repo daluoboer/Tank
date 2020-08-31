@@ -1,4 +1,4 @@
-package com.mashibing.singleton;
+package com.mashibing.dp.singleton;
 
 /**
  * @Description Mgr08

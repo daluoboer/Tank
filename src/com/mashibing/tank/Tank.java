@@ -103,7 +103,7 @@ public class Tank extends GameObject{
         }
 
         if (this.group == Group.BAD && random.nextInt(100) > 95) {
-            this.fire();
+            this.goFire();
             randomDir();
         }
 
@@ -140,7 +140,7 @@ public class Tank extends GameObject{
         this.moving = moving;
     }
 
-    public void fire() {
+    public void goFire() {
         fs.fire(this);
     }
 

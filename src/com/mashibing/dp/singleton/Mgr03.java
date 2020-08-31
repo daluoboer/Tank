@@ -1,25 +1,25 @@
-package com.mashibing.singleton;
+package com.mashibing.dp.singleton;
 
 /**
  * @Description Mgr03
  * 饿汉式
- * 每次要锁，降低了效率
+ * 线程不安全
  * @Author Radish
  * @Date 2020-08-30 08:11
  */
-public class Mgr04 {
-    private static Mgr04 INSTANCE;
+public class Mgr03 {
+    private static Mgr03 INSTANCE;
 
-    private Mgr04() {}
+    private Mgr03() {}
 
-    public static synchronized Mgr04 getInstance() {
+    public static Mgr03 getInstance() {
         if (INSTANCE == null) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            INSTANCE = new Mgr04();
+            INSTANCE = new Mgr03();
         }
         return INSTANCE;
     }
@@ -28,7 +28,7 @@ public class Mgr04 {
         for (int i = 0; i < 100; i++) {
             //lambda:对一个匿名类只有一个方法的形式
             new Thread(()->{
-                System.out.println(Mgr04.getInstance().hashCode());
+                System.out.println(Mgr03.getInstance().hashCode());
             }).start();
         }
     }
