@@ -1,5 +1,8 @@
 package com.mashibing.tank;
 
+import com.mashibing.tank.decorator.RectDecorator;
+import com.mashibing.tank.decorator.TailDecorator;
+
 /**
  * @Description DefaultFireStrategy
  * @Author Radish
@@ -15,6 +18,7 @@ public class DefaultFireStrategy implements FireStrategy {
     public void fire(Tank t) {
         int bX = t.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
         int bY = t.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-        new Bullet(bX, bY, t.dir,t.getGroup());
+        //TODO:把自己又加了一遍
+        GameModel.getInstance().add(new RectDecorator(new TailDecorator(new Bullet(bX, bY, t.dir,t.getGroup()))));
     }
 }
