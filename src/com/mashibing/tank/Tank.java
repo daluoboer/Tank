@@ -2,6 +2,9 @@ package com.mashibing.tank;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.UUID;
+
+import com.mashibing.tank.net.TankJoinMsg;
 
 /**
  * @Description com.mashibing.tank.Tank
@@ -13,11 +16,12 @@ public class Tank {
     private int x, y;
     private Dir dir = Dir.DOWN;
     private static final int SPEED = 1;
-    private boolean moving = true;
+    private boolean moving = false;
     private boolean living = true;
     public static final int WIDTH = ResourceMgr.goodTankU.getWidth();
     public static final int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
+    private UUID id = UUID.randomUUID();
     private Random random = new Random();
 
     private TankFrame tf;
@@ -37,10 +41,26 @@ public class Tank {
     }
 
 
-    public void paint(Graphics g) {
+    public Tank(TankJoinMsg msg) {
+		this.x = msg.x;
+		this.y = msg.y;
+		this.dir = msg.dir;
+		this.moving = msg.moving;
+		this.group = msg.group;
+		this.id = msg.id;
+	}
+
+
+	public void paint(Graphics g) {
         if (!living) {
-            tf.enemies.remove(this);
+            tf.tanks.remove(this);
         }
+        
+        Color c = g.getColor();
+		g.setColor(Color.YELLOW);
+		g.drawString(id.toString(), this.x, this.y - 10);
+		g.setColor(c);
+        
         switch (dir) {
             case LEFT:
                 g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL : ResourceMgr.badTankL,x,y,null);
@@ -146,4 +166,16 @@ public class Tank {
     public void setGroup(Group group) {
         this.group = group;
     }
+
+
+	public UUID getId() {
+		return id;
+	}
+
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+    
+    
 }

@@ -6,7 +6,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * @Description com.mashibing.tank.TankFrame
@@ -14,19 +18,23 @@ import java.util.List;
  * @Date 2020-08-28 15:14
  */
 public class TankFrame extends Frame {
-    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
+	public static final TankFrame INSTANCE = new TankFrame();
+	
+	Random r = new Random();
+	
+    Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
     List<Bullet> bullets = new ArrayList<Bullet>();
 
-    List<Tank> enemies = new ArrayList<>();
+    Map<UUID,Tank> tanks = new HashMap<>();
     Bullet b = new Bullet(300,300,Dir.DOWN,Group.GOOD,this);
     List<Explode> explodes = new ArrayList<>();
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
-    public TankFrame() throws HeadlessException {
+    private TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH,GAME_HEIGHT);
         setResizable(false);
         setTitle("com.mashibing.tank.Tank War");
-        setVisible(true);
+//        setVisible(true);
         addKeyListener(new MyKeyListener());
         addWindowListener(new WindowAdapter() {
             @Override
@@ -56,9 +64,9 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("子弹的数量：" + bullets.size(),100,60);
-        g.drawString("敌人的数量：" + enemies.size(), 100, 80);
-        g.drawString("爆炸的数量：" + explodes.size(), 100, 100);
+        g.drawString("bullets:" + bullets.size(), 10, 60);
+		g.drawString("tanks:" + tanks.size(), 10, 80);
+		g.drawString("explodes" + explodes.size(), 10, 100);
         g.setColor(c);
         myTank.paint(g);
         //画
@@ -66,20 +74,17 @@ public class TankFrame extends Frame {
             bullets.get(i).paint(g);
         }
 
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).paint(g);
-        }
+        tanks.values().stream().forEach((e)->e.paint(g));
 
         for (int i = 0; i < explodes.size(); i++) {
             explodes.get(i).paint(g);
         }
 
-        //碰撞检测 collision detect
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < enemies.size(); j++) {
-                bullets.get(i).collideWith(enemies.get(j));
-            }
-        }
+        //碰撞检测 collision detect        
+        for(int i=0; i<bullets.size(); i++) {
+			for(int j = 0; j<tanks.size(); j++) 
+				bullets.get(i).collideWith(tanks.get(j));
+		}
 
         Explode e = new Explode(100,100,this);
 
@@ -93,6 +98,18 @@ public class TankFrame extends Frame {
             if (!b.living) it.remove();
         }*/
     }
+    
+    public Tank getMainTank() {
+		return this.myTank;
+	}
+    
+    public void addTank(Tank t) {
+		tanks.put(t.getId(),t);
+	}
+	
+	public Tank findByUUID(UUID id) {
+		return tanks.get(id);
+	}
 
     class MyKeyListener extends KeyAdapter {
         boolean bL = false;
@@ -159,4 +176,7 @@ public class TankFrame extends Frame {
             }
         }
     }
+
+
+
 }

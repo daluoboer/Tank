@@ -8,13 +8,14 @@ import java.util.UUID;
 import com.mashibing.tank.Dir;
 import com.mashibing.tank.Group;
 import com.mashibing.tank.Tank;
+import com.mashibing.tank.TankFrame;
 
 /**
  * @Description TankMsg
  * @Author Radish
  * @Date 2020-09-02 11:06
  */
-public class TankJoinMsg {
+public class TankJoinMsg extends Msg{
     public int x,y;
     public Dir dir;
     public boolean moving;
@@ -43,7 +44,7 @@ public class TankJoinMsg {
 	public TankJoinMsg() {
 	}
 	
-	
+	@Override
 	public byte[] toBytes() {
 		ByteArrayOutputStream baos = null;
 		DataOutputStream dos = null;
@@ -88,6 +89,17 @@ public class TankJoinMsg {
 	public String toString() {
 		return "TankJoinMsg [x=" + x + ", y=" + y + ", dir=" + dir + ", moving=" + moving + ", group=" + group + ", id="
 				+ id + "]";
+	}
+
+	@Override
+	public void handle() {
+		// TODO Auto-generated method stub
+		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId()) || TankFrame.INSTANCE.findByUUID(id) != null) return;
+		System.out.println(this);
+		Tank t = new Tank(this);
+		TankFrame.INSTANCE.addTank(t);
+		
+		Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
 	}
 
     
