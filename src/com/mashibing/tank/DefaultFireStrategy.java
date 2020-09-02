@@ -1,14 +1,13 @@
 package com.mashibing.tank;
 
-import com.mashibing.tank.decorator.RectDecorator;
-import com.mashibing.tank.decorator.TailDecorator;
+import java.io.Serializable;
 
 /**
  * @Description DefaultFireStrategy
  * @Author Radish
  * @Date 2020-08-30 10:16
  */
-public class DefaultFireStrategy implements FireStrategy {
+public class DefaultFireStrategy implements FireStrategy, Serializable {
     /*private static final DefaultFireStrategy INSTANCE = new DefaultFireStrategy();
     private DefaultFireStrategy(){}
     public static DefaultFireStrategy getInstance() {

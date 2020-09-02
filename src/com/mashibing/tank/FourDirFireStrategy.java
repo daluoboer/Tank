@@ -1,11 +1,13 @@
 package com.mashibing.tank;
 
+import java.io.Serializable;
+
 /**
  * @Description FourDirFireStrategy
  * @Author Radish
  * @Date 2020-08-30 10:26
  */
-public class FourDirFireStrategy implements FireStrategy{
+public class FourDirFireStrategy implements FireStrategy, Serializable {
     /*private static final FourDirFireStrategy INSTANCE = new FourDirFireStrategy();
     private FourDirFireStrategy(){}
     public static FourDirFireStrategy getInstance() {
