@@ -1,54 +1,69 @@
 package com.mashibing.tank.net;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
 import com.mashibing.tank.Dir;
 import com.mashibing.tank.Group;
-import com.mashibing.tank.Tank;
 
-/**
- * @Description TankMsg
- * @Author Radish
- * @Date 2020-09-02 11:06
- */
 public class TankJoinMsg {
-    public int x,y;
-    public Dir dir;
-    public boolean moving;
-    public Group group;
-    public UUID id;
-
-    public TankJoinMsg(Tank t) {
-		this.x = t.getX();
-		this.y = t.getY();
-		this.dir = t.getDir();
-		this.group = t.getGroup();
-		this.id = t.getId();
-		this.moving = t.isMoving();
-	}
+	
+	public int x, y;
+	public Dir dir;
+	public boolean moving;
+	public Group group;
+	public UUID id;
 	
 	public TankJoinMsg(int x, int y, Dir dir, boolean moving, Group group, UUID id) {
-		this();
+		super();
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.moving = moving;
 		this.group = group;
-		this.id = id; 
+		this.id = id;
 	}
 	
 	public TankJoinMsg() {
 	}
-	
-	
+
+	public void parse(byte[] bytes) {
+		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
+		try {
+			//TODO:�ȶ�TYPE��Ϣ������TYPE��Ϣ����ͬ����Ϣ
+			//�Թ���Ϣ����
+			//dis.readInt();
+			
+			this.x = dis.readInt();
+			this.y = dis.readInt();
+			this.dir = Dir.values()[dis.readInt()];
+			this.moving = dis.readBoolean();
+			this.group = Group.values()[dis.readInt()];
+			this.id = new UUID(dis.readLong(), dis.readLong());
+			//this.name = dis.readUTF();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				dis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public byte[] toBytes() {
 		ByteArrayOutputStream baos = null;
-		DataOutputStream dos = null;
+		DataOutputStream dos = null; 
 		byte[] bytes = null;
 		try {
+			baos = new ByteArrayOutputStream();
+			dos = new DataOutputStream(baos);
+			//dos.writeInt(TYPE.ordinal());
 			dos.writeInt(x);
 			dos.writeInt(y);
 			dos.writeInt(dir.ordinal());
@@ -56,37 +71,44 @@ public class TankJoinMsg {
 			dos.writeInt(group.ordinal());
 			dos.writeLong(id.getMostSignificantBits());
 			dos.writeLong(id.getLeastSignificantBits());
+			//dos.writeUTF(name);
 			dos.flush();
 			bytes = baos.toByteArray();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (baos != null) {
+				if(baos != null) {
 					baos.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
-				if (dos != null) {
+				if(dos != null) {
 					dos.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return bytes;		
+		
+		return bytes;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "TankJoinMsg [x=" + x + ", y=" + y + ", dir=" + dir + ", moving=" + moving + ", group=" + group + ", id="
-				+ id + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getName())
+			   .append("[")
+			   .append("uuid=" + id + " | ")
+			   //.append("name=" + name + " | ")
+			   .append("x=" + x + " | ")
+			   .append("y=" + y + " | ")
+			   .append("moving=" + moving + " | ")
+			   .append("dir=" + dir + " | ")
+			   .append("group=" + group + " | ")
+			   .append("]");
+		return builder.toString();
 	}
-
-    
 }
