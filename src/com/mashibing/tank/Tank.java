@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.Random;
 import java.util.UUID;
 
+import com.mashibing.tank.net.BulletNewMsg;
+import com.mashibing.tank.net.Client;
 import com.mashibing.tank.net.TankJoinMsg;
 
 /**
@@ -136,7 +138,9 @@ public class Tank {
     public void fire() {
         int bX = this.x + WIDTH/2 - Bullet.WIDTH/2;
         int bY = this.y + HEIGHT/2 - Bullet.HEIGHT/2;
-        tf.bullets.add(new Bullet(bX, bY, this.dir,group,tf));
+        Bullet b = new Bullet(bX, bY, this.dir,group);
+//        TankFrame.INSTANCE.addBullet(b);
+        Client.INSTANCE.send(new BulletNewMsg(b));
     }
 
     public void die() {

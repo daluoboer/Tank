@@ -13,7 +13,9 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.mashibing.tank.net.Client;
+import com.mashibing.tank.net.TankDirChangedMsg;
 import com.mashibing.tank.net.TankStartMovingMsg;
+import com.mashibing.tank.net.TankStopMsg;
 
 /**
  * @Description com.mashibing.tank.TankFrame
@@ -26,10 +28,9 @@ public class TankFrame extends Frame {
 	Random r = new Random();
 	
     Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
-    List<Bullet> bullets = new ArrayList<Bullet>();
+    Map<UUID,Bullet> bullets = new HashMap<>();
 
     Map<UUID,Tank> tanks = new HashMap<>();
-    Bullet b = new Bullet(300,300,Dir.DOWN,Group.GOOD,this);
     List<Explode> explodes = new ArrayList<>();
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
@@ -73,9 +74,7 @@ public class TankFrame extends Frame {
         g.setColor(c);
         myTank.paint(g);
         //画
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
-        }
+        bullets.values().stream().forEach((e)->e.paint(g));;
 
         tanks.values().stream().forEach((e)->e.paint(g));
 
@@ -84,12 +83,13 @@ public class TankFrame extends Frame {
         }
 
         //碰撞检测 collision detect        
-        for(int i=0; i<bullets.size(); i++) {
-			for(int j = 0; j<tanks.size(); j++) 
-				bullets.get(i).collideWith(tanks.get(j));
-		}
+		/*
+		 * for(int i=0; i<bullets.size(); i++) { for(int j = 0; j<tanks.size(); j++)
+		 * bullets.get(i).collideWith(tanks.get(j)); }
+		 */
+        
 
-        Explode e = new Explode(100,100,this);
+        Explode e = new Explode(100,100);
 
 //        e.paint(g);
         /*for (com.mashibing.tank.Bullet b : bullets) {
@@ -109,9 +109,29 @@ public class TankFrame extends Frame {
     public void addTank(Tank t) {
 		tanks.put(t.getId(),t);
 	}
+    
+    public void addExplode(Explode e) {
+		explodes.add(e);
+	}
+    
+    public void removeTank(UUID id) {
+    	if (TankFrame.INSTANCE.getMainTank().getId().equals(id)) {
+			//Game Over
+    		return;
+		}
+		tanks.remove(id);
+	}
+    
+    public void addBullet(Bullet b) {
+		bullets.put(b.getId(),b);
+	}
 	
 	public Tank findByUUID(UUID id) {
 		return tanks.get(id);
+	}
+	
+	public Bullet findBulletByUUID(UUID id) {
+		return bullets.get(id);
 	}
 
     class MyKeyListener extends KeyAdapter {
@@ -169,15 +189,27 @@ public class TankFrame extends Frame {
 
         private void setMainTankDir() {
             if (!bL && !bU && !bR && !bD) {
-                myTank.setMoving(false);
+            	if (myTank.isMoving()) {
+					Client.INSTANCE.send(new TankStopMsg(getMainTank()));
+            		myTank.setMoving(false);
+				}
             } else {
-                myTank.setMoving(true);
+            	Dir lastDir = myTank.getDir();
                 if (bL) myTank.setDir(Dir.LEFT);
                 if (bU) myTank.setDir(Dir.UP);
                 if (bR) myTank.setDir(Dir.RIGHT);
                 if (bD) myTank.setDir(Dir.DOWN);
+                
+                if (!myTank.isMoving()) {
+                	Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
+				}      
+                
+                if (!lastDir.equals(myTank.getDir())) {
+					Client.INSTANCE.send(new TankDirChangedMsg(getMainTank()));
+				}
+                myTank.setMoving(true);
             }
-            Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
+            
         }
     }
 

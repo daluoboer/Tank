@@ -13,22 +13,20 @@ public class Explode {
     private int x, y;
 
 
-    private TankFrame tf;
 
     public boolean living = true;
 
     private int step = 0;
 
-    public Explode(int x, int y, TankFrame tf) {
+    public Explode(int x, int y) {
         this.x = x;
         this.y = y;
-        this.tf = tf;
     }
 
     public void paint(Graphics g) {
         g.drawImage(ResourceMgr.explodes[step++],x,y,null);
         if (step >= ResourceMgr.explodes.length) {
-            tf.explodes.remove(this);
+            TankFrame.INSTANCE.explodes.remove(this);
         }
     }
 }
