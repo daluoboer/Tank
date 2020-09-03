@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import com.mashibing.tank.net.Client;
+import com.mashibing.tank.net.TankStartMovingMsg;
+
 /**
  * @Description com.mashibing.tank.TankFrame
  * @Author Radish
@@ -174,6 +177,7 @@ public class TankFrame extends Frame {
                 if (bR) myTank.setDir(Dir.RIGHT);
                 if (bD) myTank.setDir(Dir.DOWN);
             }
+            Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
         }
     }
 

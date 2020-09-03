@@ -15,7 +15,7 @@ import com.mashibing.tank.Group;
  * @Author Radish
  * @Date 2020-09-02 11:09
  */
-public class TankJoinMsgDecoder extends ByteToMessageDecoder {
+public class MsgDecoder extends ByteToMessageDecoder {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		if(in.readableBytes() < 8) return;
@@ -33,15 +33,20 @@ public class TankJoinMsgDecoder extends ByteToMessageDecoder {
 		byte[] bytes = new byte[length];
 		in.readBytes(bytes);
 		
+		Msg msg = null;
+		
 		switch(msgType) {
 		case TankJoin:
-			TankJoinMsg msg = new TankJoinMsg();
-			msg.parse(bytes);
-			out.add(msg);
+			msg = new TankJoinMsg();
 			break;
+		case TankStartMoving:
+			msg = new TankStartMovingMsg();
 		default:
 			break;
 		}
+		
+		msg.parse(bytes);
+		out.add(msg);
 		
 	}
 }

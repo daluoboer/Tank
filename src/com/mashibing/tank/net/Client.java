@@ -33,14 +33,14 @@ public class Client {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new TankJoinMsgEncoder()).addLast(new TankJoinMsgDecoder()).addLast(new SimpleChannelInboundHandler<TankJoinMsg>(){
+                            ch.pipeline().addLast(new MsgEncoder()).addLast(new MsgDecoder()).addLast(new SimpleChannelInboundHandler<Msg>(){
                                 @Override
                                 public void channelActive(ChannelHandlerContext ctx) throws Exception {
                                     ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
                                 }
 
 								@Override
-								protected void channelRead0(ChannelHandlerContext ctx, TankJoinMsg msg) throws Exception {
+								protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
 									msg.handle();
 								}
                             });

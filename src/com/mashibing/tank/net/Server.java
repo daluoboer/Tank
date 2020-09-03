@@ -30,15 +30,17 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+                            ch.pipeline().addLast(new MsgEncoder()).addLast(new MsgDecoder()).addLast(new ChannelInboundHandlerAdapter() {
                                 @Override
                                 public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                                    System.out.println(ctx.channel().remoteAddress() + " connected!");
+                                    ServerFrame.INSTANCE.updateClientMsg(ctx.channel().remoteAddress() + " connected!");
                                     Server.clients.add(ctx.channel());
                                 }
 
                                 @Override
                                 public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                                	Msg msg1 = (Msg)msg;
+                                	ServerFrame.INSTANCE.updateClientMsg(msg1.toString());
 									Server.clients.writeAndFlush(msg);
                                 }
 
