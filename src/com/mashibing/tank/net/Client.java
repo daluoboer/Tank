@@ -66,8 +66,8 @@ public class Client {
         }
     }
 
-    public void send(TankJoinMsg tankJoinMsg) {
-        channel.writeAndFlush(tankJoinMsg);
+    public void send(Msg msg) {
+        channel.writeAndFlush(msg);
     }
 
     public void closeConnect() {

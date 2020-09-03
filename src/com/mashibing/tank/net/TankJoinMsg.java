@@ -102,5 +102,17 @@ public class TankJoinMsg extends Msg{
 		Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
 	}
 
+	@Override
+	public void parse(byte[] bytes) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public MsgType getMsgType() {
+		// TODO Auto-generated method stub
+		return MsgType.TankJoin;
+	}
+
     
 }

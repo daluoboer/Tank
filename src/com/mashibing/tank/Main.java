@@ -8,12 +8,6 @@ public class Main {
         TankFrame tf = TankFrame.INSTANCE;
         tf.setVisible(true);
 
-        /*int initTankCount = Integer.parseInt((String)PropertyMgr.get("initTankCount")) ;
-
-        for (int i = 0; i < initTankCount; i++) {
-            tf.enemies.add(new Tank(50 + i * 80, 300,Dir.DOWN, Group.BAD,tf));
-        }*/
-
         new Thread(()-> {
 			while(true) {
 				try {
