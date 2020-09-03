@@ -33,7 +33,7 @@ public class TankFrame extends Frame {
     private TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH,GAME_HEIGHT);
         setResizable(false);
-        setTitle("com.mashibing.tank.Tank War");
+        setTitle("Tank War");
 //        setVisible(true);
         addKeyListener(new MyKeyListener());
         addWindowListener(new WindowAdapter() {
